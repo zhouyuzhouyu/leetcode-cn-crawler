@@ -43,9 +43,9 @@ class insetQuestionThread(threading.Thread):
                 session = requests.Session()
                 headers = {'User-Agent': user_agent, 'Connection': 
                     'keep-alive', 'Content-Type': 'application/json',
-                    'Referer': 'https://leetcode.com/problems/' + self.title_slug}
+                    'Referer': 'https://leetcode-cn.com/problems/' + self.title_slug}
 
-                url = "https://leetcode.com/graphql"
+                url = "https://leetcode-cn.com/graphql"
                 params = {'operationName': "getQuestionDetail",
                     'variables': {'titleSlug': self.title_slug},
                     'query': '''query getQuestionDetail($titleSlug: String!) {
@@ -55,6 +55,8 @@ class insetQuestionThread(threading.Thread):
                             questionTitle
                             questionTitleSlug
                             content
+                            translatedTitle
+                            translatedContent
                             difficulty
                             stats
                             similarQuestions
@@ -84,9 +86,11 @@ class insetQuestionThread(threading.Thread):
                                 content['data']['question']['questionTitleSlug'],
                                 content['data']['question']['difficulty'],
                                 content['data']['question']['content'],
+                                content['data']['question']['translatedTitle'],
+                                content['data']['question']['translatedContent'],
                                 self.status)
                     threadLock.acquire()
-                    cursor.execute('INSERT INTO question (id, frontend_id, title, slug, difficulty, content, status) VALUES (?, ?, ?, ?, ?, ?, ?)', question_detail)
+                    cursor.execute('INSERT INTO question (id, frontend_id, title, slug, difficulty, content, translatedTitle, translatedContent, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', question_detail)
                     for tag in tags:
                         question_tag = (questionId, tag)
                         cursor.execute('INSERT INTO question_tag (question_id, tag) VALUES (?, ?)', question_tag)
@@ -108,7 +112,7 @@ class LeetcodeCrawler():
     
     # 获取到 token
     def get_csrftoken(self):
-        url = 'https://leetcode.com'
+        url = 'https://leetcode-cn.com'
         cookies = self.session.get(url).cookies
         for cookie in cookies:
             if cookie.name == 'csrftoken':
@@ -117,7 +121,7 @@ class LeetcodeCrawler():
 
     # 登陆 leetcode 账号
     def login(self, username, password):
-        url = "https://leetcode.com/accounts/login"
+        url = "https://leetcode-cn.com/accounts/login"
         
         params_data = {
             'csrfmiddlewaretoken': self.csrftoken,
@@ -125,8 +129,8 @@ class LeetcodeCrawler():
             'password':password,
             'next': 'problems'
         }
-        headers = {'User-Agent': user_agent, 'Connection': 'keep-alive', 'Referer': 'https://leetcode.com/accounts/login/',
-        "origin": "https://leetcode.com"}
+        headers = {'User-Agent': user_agent, 'Connection': 'keep-alive', 'Referer': 'https://leetcode-cn.com/accounts/login/',
+        "origin": "https://leetcode-cn.com"}
         m = MultipartEncoder(params_data)   
 
         headers['Content-Type'] = m.content_type
@@ -136,7 +140,7 @@ class LeetcodeCrawler():
 
     def get_problems(self, filters):
     
-        url = "https://leetcode.com/api/problems/all/"
+        url = "https://leetcode-cn.com/api/problems/all/"
 
         headers = {'User-Agent': user_agent, 'Connection': 'keep-alive'}
         resp = self.session.get(url, headers = headers, timeout = 10)
@@ -213,6 +217,8 @@ class LeetcodeCrawler():
                     slug               CHAR(50)    NOT NULL,
                     difficulty         CHAR(10)    NOT NULL,
                     content            TEXT        NOT NULL,
+                    translatedTitle    CHAR(50)    NOT NULL,
+                    translatedContent  TEXT        NOT NULL,
                     status             CHAR(10));''')
         
         query_table_exists = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name = 'last_ac_submission_record';"
@@ -248,7 +254,9 @@ class LeetcodeCrawler():
                 'slug': row[3],
                 'difficulty': row[4],
                 'content': row[5],
-                'status': row[6]
+                'translatedTitle': row[6],
+                'translatedContent' :row[7],
+                'status': row[8]
             }  
 
             if not self.filter_question(question_detail, filters):
@@ -318,7 +326,7 @@ class LeetcodeCrawler():
             IS_SUCCESS = False
             while not IS_SUCCESS:
                 try:
-                    url = "https://leetcode.com/graphql"
+                    url = "https://leetcode-cn.com/graphql"
                     params = {'operationName': "Submissions",
                         'variables':{"offset":0, "limit":20, "lastKey": '', "questionSlug": slug},
                             'query': '''query Submissions($offset: Int!, $limit: Int!, $lastKey: String, $questionSlug: String!) {
@@ -342,7 +350,7 @@ class LeetcodeCrawler():
 
                     json_data = json.dumps(params).encode('utf8')
 
-                    headers = {'User-Agent': user_agent, 'Connection': 'keep-alive', 'Referer': 'https://leetcode.com/accounts/login/',
+                    headers = {'User-Agent': user_agent, 'Connection': 'keep-alive', 'Referer': 'https://leetcode-cn.com/accounts/login/',
                         "Content-Type": "application/json", 'x-csrftoken': self.csrftoken}  
                     resp = self.session.post(url, data = json_data, headers = headers, timeout = 10)
                     content = resp.json()
@@ -352,7 +360,7 @@ class LeetcodeCrawler():
                             if cursor.fetchone()[0] == 0:
                                 IS_GET_SUBMISSION_SUCCESS = False
                                 while not IS_GET_SUBMISSION_SUCCESS:
-                                    code_content = self.session.get("https://leetcode.com" + submission['url'], headers = headers, timeout = 10)
+                                    code_content = self.session.get("https://leetcode-cn.com" + submission['url'], headers = headers, timeout = 10)
 
                                     pattern = re.compile(
                                         r'submissionCode: \'(?P<code>.*)\',\n  editCodeUrl', re.S
@@ -376,14 +384,17 @@ class LeetcodeCrawler():
                     pass            
         cursor.close()
 
-    def generate_question_markdown(self, question, path, has_get_code):    
-        text_path = os.path.join(path, "{:0>3d}-{}".format(question['frontedId'], question['slug']))
+    def generate_question_markdown(self, question, path, has_get_code):
+        frontedId = str(question['frontedId'])
+        if frontedId.isdigit():
+            frontedId = "{:0>3d}".format(int(frontedId))
+        text_path = os.path.join(path, "{}-{}".format(frontedId, question['slug']))
         if not os.path.isdir(text_path):
             os.mkdir(text_path)   
         with open(os.path.join(text_path, "README.md"), 'w', encoding='utf-8') as f:
-            f.write("# [{}][title]\n".format(question['title']))
+            f.write("# [{}][title]\n".format(question['translatedTitle']))
             f.write("\n## Description\n\n")
-            text = question['content']
+            text = question['translatedContent']
 
             content = html2text.html2text(text).replace("**Input:**", "Input:").replace("**Output:**", "Output:").replace('**Explanation:**', 'Explanation:').replace('\n    ', '    ')
             f.write(content)
@@ -405,7 +416,7 @@ class LeetcodeCrawler():
                     f.write("\n```\n")
 
             
-            f.write("\n[title]: https://leetcode.com/problems/{}\n".format(question['slug']))
+            f.write("\n[title]: https://leetcode-cn.com/problems/{}\n".format(question['slug']))
             
     def generate_questions_submission(self, path, filters):  
         if not self.is_login:
