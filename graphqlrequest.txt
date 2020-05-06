@@ -1,0 +1,41 @@
+Request URL: https://leetcode-cn.com/graphql/
+Request Method: POST
+Status Code: 200
+Remote Address: 47.99.228.218:443
+Referrer Policy: no-referrer-when-downgrade
+access-control-allow-credentials: true
+content-encoding: gzip
+content-security-policy: frame-ancestors 'self' https://*.leetcode.com https://leetcode.com https://*.leetcode-cn.com https://leetcode-cn.com https://*.lingkou.com https://lingkou.com https://tongji.baidu.com https://www.growingio.com https://*.leetcode.pro https://leetcode.pro
+content-type: application/json
+date: Wed, 06 May 2020 11:14:35 GMT
+server: nginx/1.15.8
+set-cookie: csrftoken=gjBUoKNUf9LoaHDX7nRKFJ3SOb094m73tCJkZn1SkE1wmf2CuqPpis2KpWfHN2Du; Domain=.leetcode-cn.com; expires=Wed, 05 May 2021 11:14:35 GMT; Max-Age=31449600; Path=/; SameSite=Lax; Secure
+set-cookie: leetcode-canary=""; expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; Path=/
+status: 200
+strict-transport-security: max-age=15724800; includeSubDomains
+vary: Accept-Encoding
+vary: Cookie, Authorization, Origin
+x-frame-options: SAMEORIGIN
+:authority: leetcode-cn.com
+:method: POST
+:path: /graphql/
+:scheme: https
+accept: */*
+accept-encoding: gzip, deflate, br
+accept-language: zh-CN,zh;q=0.9
+content-length: 1251
+content-type: application/json
+cookie: gr_user_id=7809ad39-00b1-4084-92ee-5d92646d0263; _ga=GA1.2.1874758015.1588687024; _gid=GA1.2.275942890.1588687024; grwng_uid=bba3f733-8692-42e4-9453-b3ecb98a4b74; __auc=8f2717b5171e5219fa3cb256b48; _uab_collina=158869013229841440400333; LEETCODE_SESSION=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuZXh0X2FmdGVyX29hdXRoIjoiL3Byb2JsZW1zZXQvYWxsLyIsIl9hdXRoX3VzZXJfaWQiOiI1OTUxOTEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaGFzaCI6IjVkNjgwZGUxZDljZTMxNTZkMmZlNDIzYjA1MmQzMTQ2YjUwYmMzYzEiLCJpZCI6NTk1MTkxLCJlbWFpbCI6IiIsInVzZXJuYW1lIjoiemhvdS15dS0zIiwidXNlcl9zbHVnIjoiemhvdS15dS0zIiwiYXZhdGFyIjoiaHR0cHM6Ly9hc3NldHMubGVldGNvZGUtY24uY29tL2FsaXl1bi1sYy11cGxvYWQvdXNlcnMvemhvdS15dS0zL2F2YXRhcl8xNTYxNTM0NDc0LnBuZyIsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwidGltZXN0YW1wIjoiMjAyMC0wNS0wNiAxMDoyMDo0Ni43MjUwNzgrMDA6MDAiLCJSRU1PVEVfQUREUiI6IjE3Mi4yMS4xNDcuODYiLCJJREVOVElUWSI6IjFjYzYzOTM4MzQxOTM1YjVlMmRlMjBmMGI0NDlhMjMxIn0.9ylzZoA44sRusRgNqwhcuvX8gpXADh1PUNc0O_yUy28; csrftoken=gjBUoKNUf9LoaHDX7nRKFJ3SOb094m73tCJkZn1SkE1wmf2CuqPpis2KpWfHN2Du; Hm_lvt_fa218a3ff7179639febdb15e372f411c=1588687022,1588690132,1588760447; a2873925c34ecbd2_gr_last_sent_cs1=zhou-yu-3; a2873925c34ecbd2_gr_session_id=d0296efa-eb53-49f5-9e9c-97270953a35b; a2873925c34ecbd2_gr_last_sent_sid_with_cs1=d0296efa-eb53-49f5-9e9c-97270953a35b; a2873925c34ecbd2_gr_session_id_d0296efa-eb53-49f5-9e9c-97270953a35b=true; Hm_lpvt_fa218a3ff7179639febdb15e372f411c=1588763155; a2873925c34ecbd2_gr_cs1=zhou-yu-3; __asc=cce98888171e9b1c9681b4cffee
+origin: https://leetcode-cn.com
+referer: https://leetcode-cn.com/problems/two-sum/
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36
+x-csrftoken: gjBUoKNUf9LoaHDX7nRKFJ3SOb094m73tCJkZn1SkE1wmf2CuqPpis2KpWfHN2Du
+x-definition-name: question
+x-operation-name: questionData
+{operationName: "questionData", variables: {titleSlug: "two-sum"},…}
+operationName: "questionData"
+query: "query questionData($titleSlug: String!) {↵  question(titleSlug: $titleSlug) {↵    questionId↵    questionFrontendId↵    boundTopicId↵    title↵    titleSlug↵    content↵    translatedTitle↵    translatedContent↵    isPaidOnly↵    difficulty↵    likes↵    dislikes↵    isLiked↵    similarQuestions↵    contributors {↵      username↵      profileUrl↵      avatarUrl↵      __typename↵    }↵    langToValidPlayground↵    topicTags {↵      name↵      slug↵      translatedName↵      __typename↵    }↵    companyTagStats↵    codeSnippets {↵      lang↵      langSlug↵      code↵      __typename↵    }↵    stats↵    hints↵    solution {↵      id↵      canSeeDetail↵      __typename↵    }↵    status↵    sampleTestCase↵    metaData↵    judgerAvailable↵    judgeType↵    mysqlSchemas↵    enableRunCode↵    envInfo↵    book {↵      id↵      bookName↵      pressName↵      source↵      shortDescription↵      fullDescription↵      bookImgUrl↵      pressImgUrl↵      productUrl↵      __typename↵    }↵    isSubscribed↵    isDailyQuestion↵    dailyRecordStatus↵    editorType↵    ugcQuestionId↵    __typename↵  }↵}↵"
+variables: {titleSlug: "two-sum"}
