@@ -75,11 +75,11 @@ python3 leetcode-crawler.py output -s ac -c code -u username -p password
 
 生成的 README.md 模版示例，由于我是用于刷题总结，生成的文档结合了题目以及 AC 代码。如果有其他需要，可修改源代码改成自己想要的格式
 
-![文档示例](./pictures/文档示例.png)
+![文档示例](https://github.com/zhouyuzhouyu/leetcode-cn-crawler/raw/master/Screenshots/1.png)
 
 输出文件目录，每道题以"编号+题目"的形式来命名文件
 
-![生成目录](./pictures/生成目录.png)
+![生成目录](https://github.com/zhouyuzhouyu/leetcode-cn-crawler/raw/master/Screenshots/2.png)
 
 ## TODO
 
