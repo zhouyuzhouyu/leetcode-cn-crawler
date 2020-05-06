@@ -1,8 +1,8 @@
-# leetcode-crawler
+# leetcode-cn-crawler
 
 ## 概述
 
-爬取 LeetCode 题目及提交的 AC 代码的工具，存入到本地 Sqlite 数据库中，并支持生成相应的 README.md 文件。支持爬取指定状态、难度以及标签的题目以及 AC 代码。
+爬取 LeetCode cn 题目及提交的 AC 代码的工具，存入到本地 Sqlite 数据库中，并支持生成相应的 README.md 文件。支持爬取指定状态、难度以及标签的题目以及 AC 代码。
 
 ## 运行环境
 
@@ -52,6 +52,12 @@ optional arguments:
 **注：若指定了题目状态或者要爬取 AC 代码，必须要提供用户账号密码信息参数**
 
 ## 示例
+爬取所有难度的题目，生成 README.md 到 output 目录中
+``` shell
+python3 leetcode-crawler.py output -d Easy
+python3 leetcode-crawler.py output -d Medium
+python3 leetcode-crawler.py output -d Hard
+```
 
 爬取简单难度的题目，并输出配置，生成 README.md 到 output 目录中
 
