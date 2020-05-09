@@ -5,8 +5,8 @@
 假设你是一位顺风车司机，车上最初有 `capacity` 个空座位可以用来载客。由于道路的限制，车  **只能  **向一个方向行驶（也就是说，
 **不允许掉头或改变方向** ，你可以将其想象为一个向量）。
 
-这儿有一份行程计划表 `trips[][]`，其中 `trips[i] = [num_passengers, start_location,
-end_location]` 包含了你的第 `i` 次行程信息：
+这儿有一份乘客行程计划表 `trips[][]`，其中 `trips[i] = [num_passengers, start_location,
+end_location]` 包含了第 `i` 组乘客的行程信息：
 
   * 必须接送的乘客数量；
   * 乘客的上车地点；

@@ -61,10 +61,14 @@ class insetQuestionThread(threading.Thread):
                             stats
                             similarQuestions
                             categoryTitle
+                            codeSnippets {
+                            lang
+                            code
+                            }
                             topicTags {
                             name
                             slug
-                        }
+                            }
                     }
                 }'''
                 }
@@ -88,9 +92,11 @@ class insetQuestionThread(threading.Thread):
                                 content['data']['question']['content'],
                                 content['data']['question']['translatedTitle'],
                                 content['data']['question']['translatedContent'],
+                                json.dumps(content['data']['question']['codeSnippets']),
                                 self.status)
+
                     threadLock.acquire()
-                    cursor.execute('INSERT INTO question (id, frontend_id, title, slug, difficulty, content, translatedTitle, translatedContent, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', question_detail)
+                    cursor.execute('INSERT INTO question (id, frontend_id, title, slug, difficulty, content, translatedTitle, translatedContent, codeSnippets,status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', question_detail)
                     for tag in tags:
                         question_tag = (questionId, tag)
                         cursor.execute('INSERT INTO question_tag (question_id, tag) VALUES (?, ?)', question_tag)
@@ -219,6 +225,7 @@ class LeetcodeCrawler():
                     content            TEXT        NOT NULL,
                     translatedTitle    CHAR(50)    NOT NULL,
                     translatedContent  TEXT        NOT NULL,
+                    codeSnippets       TEXT        NOT NULL,
                     status             CHAR(10));''')
         
         query_table_exists = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name = 'last_ac_submission_record';"
@@ -256,7 +263,8 @@ class LeetcodeCrawler():
                 'content': row[5],
                 'translatedTitle': row[6],
                 'translatedContent' :row[7],
-                'status': row[8]
+                'codeSnippets' :row[8],
+                'status': row[9]
             }  
 
             if not self.filter_question(question_detail, filters):
@@ -417,8 +425,23 @@ class LeetcodeCrawler():
 
             
             f.write("\n[title]: https://leetcode-cn.com/problems/{}\n".format(question['slug']))
-            
-    def generate_questions_submission(self, path, filters):  
+            """
+        "codeSnippets": [
+            {
+                "lang": "C++",
+                "langSlug": "cpp",
+                "code": "class Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        \n    }\n};",
+                "__typename": "CodeSnippetNode"
+            },
+            """
+        with open(os.path.join(text_path, question['slug'] + ".py"), 'w', encoding='utf-8') as f:
+            arrCodeSnippets = json.loads(question["codeSnippets"])
+            for dicCode in arrCodeSnippets:
+                if dicCode["lang"] == "Python3":
+                    f.write(dicCode["code"])
+                    break
+
+    def generate_questions_submission(self, path, filters):
         if not self.is_login:
             return 
         

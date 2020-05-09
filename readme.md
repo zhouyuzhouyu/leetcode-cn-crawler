@@ -54,9 +54,7 @@ optional arguments:
 ## 示例
 爬取所有难度的题目，生成 README.md 到 output 目录中
 ``` shell
-python3 leetcode-crawler.py output -d Easy
-python3 leetcode-crawler.py output -d Medium
-python3 leetcode-crawler.py output -d Hard
+python3 leetcode-crawler.py output
 ```
 
 爬取简单难度的题目，并输出配置，生成 README.md 到 output 目录中
